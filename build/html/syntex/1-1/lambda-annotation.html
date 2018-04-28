@@ -1,0 +1,644 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="zh-CN" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="zh-CN" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Iris的Lambda表达式和注解 &mdash; Iris  文档</title>
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+    <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <link rel="index" title="索引" href="../../genindex.html" />
+    <link rel="search" title="搜索" href="../../search.html" /> 
+
+  
+  <script src="../../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../../index.html" class="icon icon-home"> Iris
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../syntex-index.html">Iris语言语法介绍</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../oop-patern/oop-patern.html">Iris对象模型介绍</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">Iris</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../index.html">Docs</a> &raquo;</li>
+        
+      <li>Iris的Lambda表达式和注解</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../../_sources/syntex/1-1/lambda-annotation.md.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="irislambda">
+<h1>Iris的Lambda表达式和注解<a class="headerlink" href="#irislambda" title="永久链接至标题">¶</a></h1>
+<blockquote>
+<div><p>在<em>Iris</em> 1.1中主要为<em>Iris</em>语言增加了两项语言特性：</p>
+<ol class="simple">
+<li>Lambda表达式：便于函数式风格的程序设计；</li>
+<li>注解：提供安全的动态类型检查以及可定制的语言扩展；</li>
+</ol>
+</div></blockquote>
+<div class="section" id="lambda">
+<h2>1、Lambda表达式<a class="headerlink" href="#lambda" title="永久链接至标题">¶</a></h2>
+<div class="section" id="id1">
+<h3>1.1 Lambda表达式的语法<a class="headerlink" href="#id1" title="永久链接至标题">¶</a></h3>
+<p><em>00Iris</em>的<em>Lambda</em>表达式其实是生成<em>Block</em>对象的语法糖，提供类似于函数语言中的<em>Lambda</em>表达式一样的语法来简化<em>Block</em>对象的生成。</p>
+<p><em>Iris</em>中<em>Lambda</em>表达式的语法如下：</p>
+<blockquote>
+<div>([参数列表]) =&gt; {[<em>Lambda</em>表达式要执行的代码块]}</div></blockquote>
+<p>以下的代码示例都是合法的<em>Iris**Lambda</em>表达式：</p>
+<div class="highlight-clike notranslate"><div class="highlight"><pre><span></span>() =&gt; { ;print(&quot;Hello, World&quot;) }
+(param) =&gt; { ;print(param) }
+(arg, *params) =&gt; { 
+	;print(arg, &#39;\n&#39;)
+	;params.each() { iterator =&gt; [e] : ;print(e, &#39;\n&#39;) }
+}
+</pre></div>
+</div>
+<p><em>Lambda</em>表达式的参数列表和<em>Iris</em>中方法、<em>Block</em>对象的参数列表意义完全相同。</p>
+<p>同时，由于<em><em><em>Lambda</em>表达式是对生成</em>Block</em>对象的简化**，因此上述示例代码事实上等同于下述代码：</p>
+<div class="highlight-clike notranslate"><div class="highlight"><pre><span></span>Block.new() { ;print(&quot;Hello, World&quot;) }
+Block.new() { iterator =&gt; [param] : ;print(param)}
+Block.new() {
+    iterator =&gt; [arg, *params] :
+	;print(arg, &#39;\n&#39;)
+    ;params.each() {iterator =&gt; [e] : ;print(e, &#39;\n&#39;) }
+}
+</pre></div>
+</div>
+<p>因此，当我们要调用<em>Lambda</em>表达式的时候，我们要按照<em>Block</em>对象的方式来进行调用，下面是一个完整的示例：</p>
+<div class="highlight-clike notranslate"><div class="highlight"><pre><span></span>;max = (a, b) =&gt; { ;return a &gt; b ? a : b }
+;i = 100
+;j = 200
+;print(max.call(a, b))
+</pre></div>
+</div>
+<p>上述代码执行后将会打印</p>
+<blockquote>
+<div>200</div></blockquote>
+</div>
+<div class="section" id="iris-kernellambda">
+<h3>1.2 Iris Kernel模块中的lambda方法<a class="headerlink" href="#iris-kernellambda" title="永久链接至标题">¶</a></h3>
+<p>在<em>Iris</em> 1.1中，<em>Kernel</em>模块也提供了一个名字叫做<em>lambda</em>的方法用于创建<em>Block</em>对象，它的实现代码很简单：</p>
+<div class="highlight-clike notranslate"><div class="highlight"><pre><span></span>fun lambda() {
+    ;return block
+}
+with {
+	;return cast
+}
+without {
+	;groan(&quot;No block taken!&quot;)
+}
+</pre></div>
+</div>
+<p>使用的时候如下：</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>;max = lambda() { iterator =&gt; [a, b] : ;return a &gt; b ? a : b }
+</pre></div>
+</div>
+<p><em>Iris</em>建议使用<em>Lambda</em>表达式来创建闭包对象。</p>
+</div>
+<div class="section" id="irisself">
+<h3>1.3 Iris中的self关键字的行为<a class="headerlink" href="#irisself" title="永久链接至标题">¶</a></h3>
+<p>在<em>Iris</em> 1.1之前对于各个环境下<em>self</em>关键字的行为一直是未定义的，为了避免<em>Iris</em>中的<em>self</em>关键字出现<em>Javascript</em>中<em>this</em>关键字那样令人迷惑的效果，在这里对<em>self</em>关键字的行为作出唯一的规定：</p>
+<blockquote>
+<div><ol class="simple">
+<li><em>self</em>关键字<strong>只允许出现在方法体或者<em>Block</em>中</strong>；</li>
+<li>当<em>self</em>关键字出现在方法体中时，如果不存在调用该方法的对象，那么<em>self</em>的使用将会被视为非法调用，解释器将会抛出错误；如果存在调用该方法的对象，那么<em>self</em>就是这个对象；</li>
+<li>当<em>self</em>关键字出现在<em>Block</em>中时，<em>self</em>将会沿着闭包链一直往上查找，直至查到第一个<strong>不是闭包环境的环境</strong>，此时这个环境中如果存在调用对象，那么<em>self</em>便是这个环境中的调用对象，否则，<em>self</em>的使用将会被视为非法调用，解释器将会抛出错误。</li>
+</ol>
+</div></blockquote>
+<p>针对以上几个情况给出几个例子：</p>
+<div class="highlight-clike notranslate"><div class="highlight"><pre><span></span>;obj = self // 1
+
+fun foo() {
+  	;return self  // 2
+}
+
+;f = () =&gt; { ;print(self.name) }
+
+class Test {
+  	;gset [@name]
+    
+    fun __format(f) {
+      	;@f = f
+        ;@name = &quot;Hello&quot;
+    }
+  
+  	fun call_block() {
+      	;@f.call()
+  	}
+}
+
+;obj = Test.new(f)
+;obj.call_block()  // 3
+</pre></div>
+</div>
+<p>在上述代码中：</p>
+<blockquote>
+<div><p>1 处将会在编译期就报错，因为<em>self</em>必须存在于方法体或者<em>Block</em>中；</p>
+<p>2 处如果直接调用**foo()**的话，也会报错，因为没有具体的调用对象；</p>
+<p>3 处将的<em>obj</em>对象的实例变量*&#64;f<em>是一个内部定义了</em>self<em>关键字的</em>Block<em>对象，当这里调用该</em>Block<em>对象的时候，<em>self</em>将会向上回溯查询，最终查询到第一个调用者</em>obj*，于是<em>self</em>指向<em>obj</em>，此处打印出<strong>Hello</strong>。</p>
+</div></blockquote>
+</div>
+</div>
+<div class="section" id="id2">
+<h2>2、注解<a class="headerlink" href="#id2" title="永久链接至标题">¶</a></h2>
+<div class="section" id="id3">
+<h3>2.1 注解的作用<a class="headerlink" href="#id3" title="永久链接至标题">¶</a></h3>
+<p>在<em>Java</em>、*C#*这样子的语言中都存在<strong>注解</strong>这样子的元数据，它提供了代码级别的说明，能够对代码中的类、方法等元素进行说明、注释，提供辅助文档编写、代码分析以及提供更多编译信息的功能，并且这些注解都是可以由用户自定义的。</p>
+<p>在<em>Iris</em> 1.1中，也增加了名为<strong>注解（<em>Annotation</em>）<strong>的语法，<em>Iris</em>中的注解主要是用来为</strong>任何一个<em>Iris</em>对象做额外的预先标注、处理工作，以在动态执行的过程中完成代码层面以外的额外工作</strong>。</p>
+<p><em>Iris</em>中的注解的应用场景有且不限于以下几点：</p>
+<blockquote>
+<div><ol class="simple">
+<li>参数类型检查</li>
+<li>入口标注</li>
+<li>预处理</li>
+</ol>
+</div></blockquote>
+<p>此外，<em>Iris</em>的注解语法可能会在未来的版本中发生新增、变化，且尽量保证向下兼容。</p>
+</div>
+<div class="section" id="id4">
+<h3>2.2 注解的语法<a class="headerlink" href="#id4" title="永久链接至标题">¶</a></h3>
+<p><em>Iris</em>中的注解需要放在一个<strong>表达式、类、模块、接口、方法、块</strong>的前方，且中间不能有别的其他元素。</p>
+<p><em>Iris</em>中一个合法的注解形式为：</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">#注解名([参数列表])</span>
+<span class="p">[</span><span class="n">表达式</span><span class="o">|</span><span class="n">类定义语句</span><span class="o">|</span><span class="n">模块定义语句</span><span class="o">|</span><span class="n">接口定义语句</span><span class="o">|</span><span class="n">方法定义语句</span><span class="o">|</span><span class="n">块语句</span><span class="p">]</span>
+</pre></div>
+</div>
+<p><em><em><em>Iris</em>中任何一个注解都是</em>Annotation</em>类及其子类的一个对象**，它将会作用于被它所注解的那个对象身上，作用时机为<strong>被注解的那个表达式、语句执行完毕</strong>的时候。</p>
+<p>下面以<em>Iris</em>内置的名为***TypeCheck*<em><em>的注解为例，来直观地说明一下</em>Iris</em>注解的作用。</p>
+<div class="highlight-clike notranslate"><div class="highlight"><pre><span></span>fun print_if_string(obj) {
+	;print(
+		#TypeCheck(String)
+		obj
+	 )
+}
+
+;print_if_string(&quot;Hello, World!&quot;) // Correct
+;print_if_string(1) // Wrong type!
+</pre></div>
+</div>
+<p>上面的例子等价于：</p>
+<div class="highlight-clike notranslate"><div class="highlight"><pre><span></span>fun check_type(obj, tar_class) {
+	if(obj.__class == tar_class) {
+		;return obj
+	}
+	;groan(&quot;Wrong type!&quot;)
+}
+
+fun print_if_string(obj)}
+	;print(check_type(obj, String))
+}
+</pre></div>
+</div>
+<p>可以看到，虽然可以定义方法来进行相同的类型检查工作，但是<strong>注解使得这一工作更加一目了然</strong>。</p>
+<p>需要注意的是，在上述例子中<em>TypeCheck</em>看起来似乎是作用到了<em>obj</em>这个对象身上了，但实际并不然，这其中有这样一个过程：</p>
+<blockquote>
+<div><ol class="simple">
+<li><code class="docutils literal notranslate"><span class="pre">obj</span></code>是一个表达式，它<strong>返回<em>obj</em>这个实例变量中的对象</strong>；</li>
+<li>表达式执行完毕，注解<em>TypeCheck</em>生成一个实例并作用在这个返回的对象身上。</li>
+</ol>
+</div></blockquote>
+</div>
+<div class="section" id="id5">
+<h3>2.3 注解的实质<a class="headerlink" href="#id5" title="永久链接至标题">¶</a></h3>
+<p>注解的实质是<em>Iris</em>编译器在进行编译的过程中，编译器扫描到注解的时候，会在当前的<strong>表达式、类、模块、接口、方法、块</strong>后方自动插入一些语句，以上面的<strong>TypeCheck</strong>的例子来说，编译器事实上是插入了这样一段代码：</p>
+<div class="highlight-clike notranslate"><div class="highlight"><pre><span></span>fun print_if_string(obj) {
+	;print(
+		;TypeCheck.new().apply(obj, String)
+	 )
+}
+</pre></div>
+</div>
+<p>根据注解的对象的不同，注解的作用时间也不一样：</p>
+<blockquote>
+<div><ol class="simple">
+<li>如果是表达式，那么会在表达式返回值的时候作用；</li>
+<li>如果是类、模块、接口，那么会在该类、模块、接口定义完毕的时候作用；</li>
+<li>如果是方法，那么会在方法被定义后、添加到其对应的环境中之前作用；</li>
+<li>如果是块，那么会在块被定义之后作用；</li>
+</ol>
+</div></blockquote>
+<p>其次，每一个注解事实上都是<strong><em>Annotation</em>类及其子类的一个对象</strong>，上述<strong>TypeCheck</strong>这个注解事实上也是如此，它的定义类似下面这样：</p>
+<div class="highlight-clike notranslate"><div class="highlight"><pre><span></span>class TypeCheck extends Annotation {
+	fun __format() {
+      	;super()
+	}
+  	
+  	fun parameter_define() {
+      	;return [Class]
+  	}
+  
+  	fun apply(obj, *params) {
+      	if(obj.__class != params[0]) {
+          	;groan(&quot;Error Type!&quot;)
+      	}
+      	;return obj
+  	}
+}
+</pre></div>
+</div>
+<p>一般来说，一个可用的注解类应该重写<em>parameter_define</em>以及<em>apply</em>方法，这两个方法的签名如下：</p>
+<div class="highlight-clike notranslate"><div class="highlight"><pre><span></span>fun parameter_define();
+fun apply(obj, *params);
+</pre></div>
+</div>
+<p>其中<em>parameter_define</em>用于定义<em>apply</em>方法<em>params</em>这个可变参数所能接受的参数类型，这个方法需要返回一个数组，其中按顺序存放要传入注解<em>params</em>中的各个参数的类型（比如上面<code class="docutils literal notranslate"><span class="pre">#TypeCheck(String)</span></code>这行注解传入到<em>apply</em>的<em>params</em>中的就是*[String]<em>）；如果参数可变或者需要用户自行控制，那么直接返回</em>nil*即可。</p>
+<p>而<em>apply</em>是<strong>将注解应用到目标对象身上的关键方法</strong>，它的第一个参数就是被注释的对象，第二个参数就是在注解中传入的参数。</p>
+</div>
+<div class="section" id="id6">
+<h3>2.4 注解作用示例<a class="headerlink" href="#id6" title="永久链接至标题">¶</a></h3>
+<blockquote>
+<div>下面以不同对象为例，说明注解是如何作用在不同对象身上的</div></blockquote>
+<div class="section" id="id7">
+<h4>2.4.1 注解作用在表达式上<a class="headerlink" href="#id7" title="永久链接至标题">¶</a></h4>
+<p>当注解用于表达式上的时候，它只会<strong>对最接近它的那个表达式的返回值作用</strong>。</p>
+<p>考虑以下代码：</p>
+<div class="highlight-clike notranslate"><div class="highlight"><pre><span></span>;#TypeCheck(&lt;ClassName&gt;)
+ xxx().yyy().zzz()
+
+;(#TypeCheck(&lt;ClassName&gt;)
+  xxx()).yyy().zzz()
+/*
+也可以写成
+;(#TypeCheck(&lt;ClassName&gt; xxx()).yyy().zzz()
+*/
+
+;(#TypeCheck(&lt;ClassName&gt;)
+  xxx().yyy()).zzz()
+/*
+也可以写成
+;(#TypeCheck(&lt;ClassName&gt;) xxx().yyy()).zzz()
+*/
+</pre></div>
+</div>
+<p>上面三个注解的作用对象并不相同：</p>
+<ol class="simple">
+<li>第一个注解的作用对象是表达式<code class="docutils literal notranslate"><span class="pre">xxx().yyy().zzz()</span></code>的整体返回值；</li>
+<li>第二个注解的作用对象是表达式<code class="docutils literal notranslate"><span class="pre">xxx()</span></code>的返回值；</li>
+<li>第三个注解的作用对象是表达式<code class="docutils literal notranslate"><span class="pre">xxx().yyy()</span></code>的整体返回值；</li>
+</ol>
+<p>再次强调，<strong>注解只能作用于表达式（Expression）上，而不能作用于语句（Statement）</strong>，所以如果上述代码写成：</p>
+<div class="highlight-clike notranslate"><div class="highlight"><pre><span></span>#TypeCheck(&lt;ClassName&gt;)
+;xxx().yyy().zzz()
+</pre></div>
+</div>
+<p>那么编译器将会直接报错，因为<code class="docutils literal notranslate"><span class="pre">;xxx().yyy().zzz()</span></code>是一个常语句。</p>
+</div>
+<div class="section" id="id8">
+<h4>2.4.2 注解作用在类、模块、接口上<a class="headerlink" href="#id8" title="永久链接至标题">¶</a></h4>
+<p>由于注解作用在类、模块、接口上的逻辑是一致的，所以这里放在一起说明。</p>
+<p>作用在类、模块、接口上的注解将会在类、模块、接口定义完毕之后作用。下面我们自定义一个注解，用来检查该类的所有实例方法的名字是否都以小写字母开头。</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>class CheckInstanceMethodName extends Annotation {
+	fun __format() {
+      	;super()
+	}
+  	
+  	fun parameter_define() {
+      	;return nil
+  	}
+  
+  	fun apply(obj, *params) {
+      	;regex = Regex.new(@&quot;^[a-z].*&quot;)
+      	;(#TypeCheck(Class) obj).__own_instance_methods.each() {
+			iterator =&gt; [m] :
+			if(!regex.match(m.name)) {
+				;print(&#39;Wrong method name : &#39;, m.name, &#39;\n&#39;)
+			}
+      	}
+      	
+      	return obj
+  	}
+}
+</pre></div>
+</div>
+<p>然后我们定义类：</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">#CheckInstanceMethodName()</span>
+<span class="k">class</span> <span class="nc">TestClass</span> <span class="p">{</span>
+	<span class="n">fun</span> <span class="n">Test</span><span class="p">()</span> <span class="p">{}</span>
+	<span class="n">fun</span> <span class="n">test</span><span class="p">()</span> <span class="p">{}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>这个示例将会打印：</p>
+<blockquote>
+<div>Wrong method name : Test</div></blockquote>
+</div>
+<div class="section" id="id9">
+<h4>2.4.3 注解作用在方法、块上<a class="headerlink" href="#id9" title="永久链接至标题">¶</a></h4>
+<p>当注解作用在方法或块上时，可以控制方法或块的作用时机。</p>
+<blockquote>
+<div><ol class="simple">
+<li>调用方法或块前</li>
+<li>调用方法或块后</li>
+<li>定义方法或块时</li>
+</ol>
+</div></blockquote>
+<p>除3以外，作用时机的控制的关键在于<em>Method</em>（<em>Block</em>）对象的两个属性：__pre_call/__post_call。</p>
+<p>其中：</p>
+<blockquote>
+<div><p><em>__pre_call</em>接受签名为 (obj, *params) =&gt; {} 的<em>Block</em>对象，其中<em>obj</em>表示调用该方法的对象，<em>params</em>表示调用该方法时传入的参数；</p>
+<p><em>__post_call</em>接受签名为(result) =&gt; {} 的<em>Block</em>对象，其中<em>result</em>表示该方法执行完毕的返回值。</p>
+</div></blockquote>
+<p>下面以定义方法的注解为例，举一个具体的例子来说明这三种作用时机。在下面的例子中，我们定义一个<em>StartWithLowerCase</em>注解来检查被注解的方法是否是以小写字母开头，如果是，则打印出该方法的名字；然后我们再定义一个<em>ParameterCheck</em>注解来在方法被调用前检查传入的参数是否为指定类型（实现类似静态语言类型检查的功能）；最后，我们定义一个<em>ConvertResultToString</em>注解来把被注解的方法的返回值都转换成<em>String</em>。</p>
+<div class="highlight-clike notranslate"><div class="highlight"><pre><span></span>class StartWithLowerCase extends Annotation {
+	fun __format() {
+      	;super()
+	}
+  
+    fun parameter_define() {
+      	;return nil
+  	}
+  
+  	fun apply(obj, *params) {
+      	if([&#39;a&#39;=&gt;&#39;z&#39;].include(obj.name[0])) {
+          	;print(obj.name, &quot;\n&quot;)
+      	}
+      	;return obj
+  	}
+}
+
+class ParameterCheck extends Annotation {
+  	fun __format() {
+      	;super()
+  	}
+  
+    fun parameter_define() {
+      	;return nil
+  	}
+  	
+  	fun apply(obj, *params) {
+		;obj.__pre_call = (obj, *rparams) =&gt; {
+          	if(!all_extends(rparams, params)) {
+              	;groan(&quot;Invaild parameter list.\n&quot;)
+          	}
+		 }
+      	;return obj
+    }
+  
+  	fun all_extends(objs, classes) {
+      	if(objs.size != classes.size) {
+          	;return false
+      	}
+      	;i = 0
+        if(true, i &lt; objs.size) {
+          	if(!objs[i].__instance_of(classes[i])) {
+              	;return false
+          	}
+        }
+      	;return true
+  	}
+}
+
+class ConvertResultToString extends Annotation {
+  	fun __format() {
+      	;super()
+  	}
+  
+    fun parameter_define() {
+      	;return []
+  	}
+  
+  	fun apply(obj, *params) {
+		;obj.__post_call = (result) =&gt; {
+          	;return result.to_string()
+		 }
+    }
+}
+</pre></div>
+</div>
+<p>然后编写我们的测试类：</p>
+<div class="highlight-clike notranslate"><div class="highlight"><pre><span></span>class TestClass {
+    #StartWithLowerCase()
+  	fun foo1() {}
+  	
+  	#StartWithLowerCase()
+  	fun Foo2() {}
+  
+  	#ParameterCheck(String, String)
+  	fun foo3(p1, p2) {
+      	;print(&quot;Hello, &quot;, p1, &quot; &quot;, p2, &#39;\n&#39;)
+  	}
+  
+  	#ConvertResultToString()
+	fun foo4() {
+      	;return true
+	}
+}
+
+;obj = TestClass.new()
+;obj.foo3(&quot;One&quot;, &quot;Two&quot;)
+;print(obj.foo4())
+;obj.foo3(1, 2)
+</pre></div>
+</div>
+<p>执行代码后，将会打印：</p>
+<blockquote>
+<div><p>foo1</p>
+<p>Hello, One Two</p>
+<p>true</p>
+<p>Invaild parameter list</p>
+</div></blockquote>
+</div>
+</div>
+<div class="section" id="id10">
+<h3>2.5 注解作用的顺序<a class="headerlink" href="#id10" title="永久链接至标题">¶</a></h3>
+<p>同一个对象可以作用多个注解，注解的作用顺序为：<strong>离作用对象最近的那个注解先作用，然后再以此往前作用</strong>。</p>
+<p>比如，如果有3个注解<em>A、B、C</em>，作用在一个表达式上：</p>
+<div class="highlight-clike notranslate"><div class="highlight"><pre><span></span>#C()
+#B()
+#A()
+expression
+</pre></div>
+</div>
+<p>那么执行顺序将会是：</p>
+<div class="highlight-clike notranslate"><div class="highlight"><pre><span></span>C.new().apply(B.new().apply(A.new().apply(expression)))
+</pre></div>
+</div>
+<p>事实上上述代码与下面的代码等价：</p>
+<div class="highlight-clike notranslate"><div class="highlight"><pre><span></span>#C() (#B() (#A() expression))
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2018, Hui.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../../',
+            VERSION:'',
+            LANGUAGE:'zh_CN',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="../../_static/jquery.js"></script>
+      <script type="text/javascript" src="../../_static/underscore.js"></script>
+      <script type="text/javascript" src="../../_static/doctools.js"></script>
+      <script type="text/javascript" src="../../_static/translations.js"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../../_static/js/theme.js"></script>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          
+          SphinxRtdTheme.Navigation.enableSticky();
+          
+      });
+  </script> 
+
+</body>
+</html>
